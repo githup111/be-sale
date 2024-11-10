@@ -28,7 +28,7 @@ class CommonHelper {
 
                 .then((image) => {
                     ctx.drawImage(image, 0, 0)
-                    ctx.font = '25px "Comic Sans MS"'
+                    ctx.font = '25px Arial';
                     ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)]
                     ctx.scale(1.5, .7)
                     ctx.fillText(text, 5, 30)
