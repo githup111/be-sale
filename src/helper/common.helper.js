@@ -33,16 +33,26 @@ class CommonHelper {
                     ctx.scale(1.5, .7)
                     ctx.fillText(text, 5, 30)
 
-                    for (let i = 0; i < Math.floor(Math.random() * 5); i++) {
-                        ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)]
-                        ctx.lineWidth = Math.ceil(Math.random() * 3)
-                        ctx.beginPath();
-                        let x = Math.random() * canvas.width / 2
-                        let y = Math.random() * canvas.height / 2
-                        ctx.moveTo(x, y)
-                        ctx.lineTo(canvas.width / 2 + canvas.width / 2 - x, canvas.height / 2 + canvas.height / 2 - y)
-                        ctx.stroke()
+                    let letterSpacing = 10; // Điều chỉnh khoảng cách giữa các chữ
+
+                    let xPos = 5; // Vị trí bắt đầu của chữ
+                    for (let i = 0; i < text.length; i++) {
+                        ctx.fillText(text[i], xPos, 30);  // Vẽ từng ký tự tại vị trí (xPos, 30)
+                        xPos += ctx.measureText(text[i]).width + letterSpacing;  // Tăng vị trí xPos để tạo khoảng cách
                     }
+
+                    // Vẽ các đường nét ngẫu nhiên
+                    for (let i = 0; i < Math.floor(Math.random() * 5); i++) {
+                        ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+                        ctx.lineWidth = Math.ceil(Math.random() * 3);
+                        ctx.beginPath();
+                        let x = Math.random() * canvas.width / 2;
+                        let y = Math.random() * canvas.height / 2;
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(canvas.width / 2 + canvas.width / 2 - x, canvas.height / 2 + canvas.height / 2 - y);
+                        ctx.stroke();
+                    }
+
                     base64 = canvas.toDataURL("image/png")
                 })
             // console.log(text);
