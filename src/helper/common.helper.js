@@ -29,7 +29,7 @@ class CommonHelper {
                     ctx.scale(1.5, .7);
 
                     // Khoảng cách giữa các chữ
-                    let letterSpacing = 20; // Điều chỉnh giá trị này để tăng/giảm khoảng cách
+                    let letterSpacing = 15; // Điều chỉnh giá trị này để tăng/giảm khoảng cách
                     let x = 5;
 
                     // Vẽ từng ký tự với khoảng cách tùy chỉnh
