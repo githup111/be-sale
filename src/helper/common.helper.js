@@ -6,42 +6,39 @@ class CommonHelper {
 
 
     async generatorCaptcha() {
-
         try {
-
-            //create text
-            let characters = "1234567890qwertyuiopasdfghjklzxcvbbnmQWERTYUIOPASDFGHJKLZXCVBNM"
-            let text = ""
+            // Tạo văn bản ngẫu nhiên
+            let characters = "1234567890qwertyuiopasdfghjklzxcvbbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+            let text = "";
             for (let i = 0; i < 5; i++) {
-                text += characters[Math.floor(Math.random() * characters.length)]
+                text += characters[Math.floor(Math.random() * characters.length)];
             }
 
-            //create canvas obj
-            let canvas = createCanvas(150, 40)
-            let ctx = canvas.getContext("2d")
+            // Tạo đối tượng canvas
+            let canvas = createCanvas(150, 40);
+            let ctx = canvas.getContext("2d");
 
-
-            //create base64 image
-            let base64 = ""
-            let colors = ["red", "green", "blue", 'orange', "black"]
+            // Tạo hình ảnh nền base64
+            let base64 = "";
+            let colors = ["red", "green", "blue", 'orange', "black"];
             await loadImage(`./src/public/images/bgCaptcha${Math.ceil(Math.random() * 2)}.png`)
-
                 .then((image) => {
-                    ctx.drawImage(image, 0, 0)
-                    ctx.font = '25px Arial';
-                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)]
-                    ctx.scale(1.5, .7)
-                    ctx.fillText(text, 5, 30)
+                    ctx.drawImage(image, 0, 0);
+                    ctx.font = '30px Arial';
+                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.scale(1.5, .7);
 
-                    let letterSpacing = 10; // Điều chỉnh khoảng cách giữa các chữ
+                    // Khoảng cách giữa các chữ
+                    let letterSpacing = 20; // Điều chỉnh giá trị này để tăng/giảm khoảng cách
+                    let x = 5;
 
-                    let xPos = 5; // Vị trí bắt đầu của chữ
+                    // Vẽ từng ký tự với khoảng cách tùy chỉnh
                     for (let i = 0; i < text.length; i++) {
-                        ctx.fillText(text[i], xPos, 30);  // Vẽ từng ký tự tại vị trí (xPos, 30)
-                        xPos += ctx.measureText(text[i]).width + letterSpacing;  // Tăng vị trí xPos để tạo khoảng cách
+                        ctx.fillText(text[i], x, 30);
+                        x += letterSpacing; // Cộng thêm khoảng cách cho vị trí x tiếp theo
                     }
 
-                    // Vẽ các đường nét ngẫu nhiên
+                    // Vẽ các đường nhiễu
                     for (let i = 0; i < Math.floor(Math.random() * 5); i++) {
                         ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
                         ctx.lineWidth = Math.ceil(Math.random() * 3);
@@ -52,36 +49,31 @@ class CommonHelper {
                         ctx.lineTo(canvas.width / 2 + canvas.width / 2 - x, canvas.height / 2 + canvas.height / 2 - y);
                         ctx.stroke();
                     }
+                    base64 = canvas.toDataURL("image/png");
+                });
 
-                    base64 = canvas.toDataURL("image/png")
-                })
-            // console.log(text);
-
-            const hash = crypto.createHash("md5")
-            let key = hash.update(text + process.env.CAPTCHA_SECRECT_KEY + Date.now() + Math.random()).digest('hex')
+            const hash = crypto.createHash("md5");
+            let key = hash.update(text + process.env.CAPTCHA_SECRECT_KEY + Date.now() + Math.random()).digest('hex');
 
             globalThis.tokenCaptcha.set(key, {
                 isUse: false,
                 text,
                 date: Date.now() + 15 * 1000
-            })
+            });
 
             console.log(globalThis.tokenCaptcha);
 
-
             setTimeout(() => {
-                globalThis.tokenCaptcha.delete(key)
-            }, 15000)
+                globalThis.tokenCaptcha.delete(key);
+            }, 15000);
 
             return {
                 text, base64, state: true, key
-            }
+            };
 
         } catch (error) {
-            throw new Error("error when generatorCaptcha : " + error)
+            throw new Error("error when generatorCaptcha : " + error);
         }
-
-
     }
 
     verifyCaptcha(key, textCaptchaClient) {
